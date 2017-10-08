@@ -22,14 +22,8 @@ int socket_client(int portno, char *hostname, char *message, int message_len)
     struct sockaddr_in serv_addr; //Structures Defined in netlib.h
     struct hostent *server;       //
 
-    char * buffer;
-    buffer = (char*) malloc(256);
-    bzero(buffer,256);
-
-    //Open Socket
     sockfd = socket(AF_INET, SOCK_STREAM, 0); //AF_INET creates IP socket, SOCK_STREAM creates TCP socket
-    if (sockfd < 0) 
-        error("ERROR opening socket");
+    if (sockfd < 0) error("ERROR opening socket");
 
     server = gethostbyname(hostname);
     if (server == NULL) {
@@ -37,8 +31,7 @@ int socket_client(int portno, char *hostname, char *message, int message_len)
         exit(0);
     }
 
-    printf("%s\n", server->h_name);
-    fflush(stdout);
+    printf("%s\n", server->h_name); fflush(stdout);
 
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
@@ -49,24 +42,10 @@ int socket_client(int portno, char *hostname, char *message, int message_len)
     if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
         error("ERROR connecting");
     return  sockfd;
-
-    /*
-    n = write(sockfd, message, message_len); //Write Message from buffer to socket
-    if (n < 0) 
-         error("ERROR writing to socket");
-    bzero(buffer,256);
-    n = read(sockfd, buffer, 255); //Read Socket into Buffer
-    if (n < 0) 
-         error("ERROR reading from socket");
-    printf("%s\n",buffer); //Print Response
-    return buffer;
-    */
 }
 
 int socket_server(int portno)  //Args Port
 {
-     printf("test\n");
-     fflush(stdout);
      int sockfd, newsockfd, clilen;
      struct sockaddr_in serv_addr, cli_addr;
      int n;
@@ -77,8 +56,7 @@ int socket_server(int portno)  //Args Port
 
      //Open Socket
      sockfd = socket(AF_INET, SOCK_STREAM, 0);
-     if (sockfd < 0) 
-        error("ERROR opening socket");
+     if (sockfd < 0) error("ERROR opening socket");
 
      bzero((char *) &serv_addr, sizeof(serv_addr));
      serv_addr.sin_family = AF_INET;
@@ -89,15 +67,12 @@ int socket_server(int portno)  //Args Port
      if (bind(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
               error("ERROR on binding");
      listen(sockfd, 15); //Listen on bound socket
-     printf("listening\n");
-     fflush(stdout);
+     printf("listening\n"); fflush(stdout);
 
      clilen = sizeof(cli_addr);
      newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen); //blocks process until client connects
-     printf("accepted\n");
-     fflush(stdout);
-     if (newsockfd < 0) 
-          error("ERROR on accept");
+     printf("accepted\n"); fflush(stdout);
+     if (newsockfd < 0) error("ERROR on accept");
 
      n = read(newsockfd, buffer, 255); //Reads from socket into buffer
      if (n < 0) error("ERROR reading from socket");
