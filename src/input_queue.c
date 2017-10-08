@@ -49,8 +49,3 @@ Connection * dequeue(ConnectionQueue * conn_queue) {
     conn_queue->front = front_conn->previous;
     return front_conn->conn;
 }
-
-int main(int argc, char *argv[])
-{
-
-}
