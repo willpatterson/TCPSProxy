@@ -4,3 +4,5 @@
 .DS_Store
 server
 client
+tcp_proxy
+a.out
