@@ -40,7 +40,8 @@ int main(int argc, char *argv[]) //Args: Hostname, Port Number
         exit(0);
     }
 
-    printf("%s", server->h_name);
+    printf("%s\n", server->h_name);
+    fflush(stdout);
 
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
@@ -48,18 +49,18 @@ int main(int argc, char *argv[]) //Args: Hostname, Port Number
     serv_addr.sin_port = htons(portno);
 
     //Attempt to connect 
-    if (connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr)) < 0) 
+    if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
         error("ERROR connecting");
 
     //Read Message
     printf("Please enter the message: ");
     bzero(buffer,256);
     fgets(buffer,255,stdin);
-    n = write(sockfd,buffer,strlen(buffer)); //Write Message from buffer to socket
+    n = write(sockfd, buffer, strlen(buffer)); //Write Message from buffer to socket
     if (n < 0) 
          error("ERROR writing to socket");
     bzero(buffer,256);
-    n = read(sockfd,buffer,255); //Read Socket into Buffer
+    n = read(sockfd, buffer, 255); //Read Socket into Buffer
     if (n < 0) 
          error("ERROR reading from socket");
     printf("%s\n",buffer); //Print Response

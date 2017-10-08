@@ -13,7 +13,7 @@ void error(char *msg)
     exit(1);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[])  //Args Port
 {
      printf("test\n");
      fflush(stdout);
@@ -40,15 +40,14 @@ int main(int argc, char *argv[])
      serv_addr.sin_port = htons(portno);
      
      //Binds socket to address and port (port contained in serv_addr
-     if (bind(sockfd, (struct sockaddr *) &serv_addr,
-              sizeof(serv_addr)) < 0) 
+     if (bind(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
               error("ERROR on binding");
-     listen(sockfd,5); //Listen on bound socket
+     listen(sockfd, 15); //Listen on bound socket
      printf("listening\n");
      fflush(stdout);
 
      clilen = sizeof(cli_addr);
-     newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen); //blocks process until client connects
+     newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen); //blocks process until client connects
      printf("accepted\n");
      fflush(stdout);
      if (newsockfd < 0) 
