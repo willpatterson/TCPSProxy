@@ -14,7 +14,7 @@ void error(char *msg)
     exit(1);
 }
 
-char * socket_client(int portno, char *hostname, char *message, int message_len) 
+int socket_client(int portno, char *hostname, char *message, int message_len) 
 {
     int sockfd, n;
 
@@ -47,7 +47,9 @@ char * socket_client(int portno, char *hostname, char *message, int message_len)
     //Attempt to connect 
     if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
         error("ERROR connecting");
+    return  sockfd;
 
+    /*
     n = write(sockfd, message, message_len); //Write Message from buffer to socket
     if (n < 0) 
          error("ERROR writing to socket");
@@ -57,6 +59,7 @@ char * socket_client(int portno, char *hostname, char *message, int message_len)
          error("ERROR reading from socket");
     printf("%s\n",buffer); //Print Response
     return buffer;
+    */
 }
 
 int socket_server(int portno)  //Args Port
@@ -95,14 +98,23 @@ int socket_server(int portno)  //Args Port
      if (newsockfd < 0) 
           error("ERROR on accept");
 
-     n = read(newsockfd,buffer,255); //Reads from socket into buffer
+     n = read(newsockfd, buffer, 255); //Reads from socket into buffer
      if (n < 0) error("ERROR reading from socket");
 
-     buffer = socket_client(6379, "127.0.0.1", buffer, 255);
+     //CREATE/READ TO/WRITE FROM client socket
+     int client_sock;
+     client_sock = socket_client(6379, "127.0.0.1", buffer, 255);
+     n = write(client_sock, buffer, 255); 
+     if (n < 0) error("ERROR reading from client socket");
+     n = read(client_sock, buffer, 255); 
+     if (n < 0) error("ERROR writing to client socket");
+     close(client_sock);
 
      printf("Here is the message: %s\n",buffer);
-     n = write(newsockfd,buffer, 255); //Replies to client by writing back into socket
+     n = write(newsockfd, buffer, 255); //Replies to client by writing back into socket
      if (n < 0) error("ERROR writing to socket");
+     close(newsockfd);
+     close(sockfd);
      return 0; 
 }
 
