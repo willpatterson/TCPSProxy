@@ -10,7 +10,7 @@
 #include <netdb.h> 
 #include <unistd.h>
 
-int BUFFER_SIZE = 512;
+int BUFFER_SIZE = 1024*4;
 
 typedef struct backend_server {
     char * address;
@@ -98,24 +98,29 @@ int tcp_splitter(int frontend_port, BACKEND_SERVER * backends, int backend_no)
             bzero(client_buffers[i], BUFFER_SIZE);
 
             n = write(client_sock, buffer, BUFFER_SIZE-1); 
-            if (n < 0) error("ERROR reading from client socket");
-            n = read(client_sock, client_buffers[i], BUFFER_SIZE-1); 
             if (n < 0) error("ERROR writing to client socket");
+            n = read(client_sock, client_buffers[i], BUFFER_SIZE-1); 
+            if (n < 0) error("ERROR reading from client socket");
             close(client_sock);
         }
     
-        //Print Split replies + deallocate client_buffers
+        //Print Split replies
         //TODO: 
         // * Check for diffs in split replies
         // * Develop policy for responding when replies differ
         for (i=0; i<backend_no; ++i) {
             printf(client_buffers[i]); fflush(stdout);
-            free(client_buffers[i]);
         }
 
         //Replies to back to client
-        n = write(newsockfd, buffer, BUFFER_SIZE-1); 
+        n = write(newsockfd, client_buffers[0], BUFFER_SIZE-1); 
         if (n < 0) error("ERROR writing to socket");
+
+        // Free client_buffers
+        for (i=0; i<backend_no; ++i) {
+            free(client_buffers[i]);
+        }
+
         close(newsockfd);
     }
     close(sockfd);
