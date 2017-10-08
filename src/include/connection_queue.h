@@ -3,8 +3,9 @@
 #include <string.h>
 
 typedef struct connection Connection;
+typedef struct connection_node ConnectionNode;
 typedef struct connection_queue ConnectionQueue;
 
 ConnectionQueue * init_queue(int max_length);
-int enqueue(ConnectionQueue * conn_queue, Connection * conn);
+int enqueue(ConnectionQueue * conn_queue, ConnectionNode * conn);
 Connection * dequeue(ConnectionQueue * conn_queue);
