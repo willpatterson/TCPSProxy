@@ -9,6 +9,8 @@
 #include <netdb.h> 
 #include <unistd.h>
 
+int BUFFER_SIZE = 10;
+
 void error(char *msg)
 {
     perror(msg);
@@ -51,8 +53,8 @@ int socket_server(int portno)  //Args Port
      int n;
 
      char * buffer;
-     buffer = (char *) malloc(256);
-     bzero(buffer,256);
+     buffer = (char *) malloc(BUFFER_SIZE);
+     bzero(buffer,BUFFER_SIZE);
 
      //Open Socket
      sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -74,20 +76,20 @@ int socket_server(int portno)  //Args Port
      printf("accepted\n"); fflush(stdout);
      if (newsockfd < 0) error("ERROR on accept");
 
-     n = read(newsockfd, buffer, 255); //Reads from socket into buffer
+     n = read(newsockfd, buffer, BUFFER_SIZE-1); //Reads from socket into buffer
      if (n < 0) error("ERROR reading from socket");
 
      //CREATE/READ TO/WRITE FROM client socket
      int client_sock;
-     client_sock = socket_client(6379, "127.0.0.1", buffer, 255);
-     n = write(client_sock, buffer, 255); 
+     client_sock = socket_client(6379, "127.0.0.1", buffer, BUFFER_SIZE-1);
+     n = write(client_sock, buffer, BUFFER_SIZE-1); 
      if (n < 0) error("ERROR reading from client socket");
-     n = read(client_sock, buffer, 255); 
+     n = read(client_sock, buffer, BUFFER_SIZE-1); 
      if (n < 0) error("ERROR writing to client socket");
      close(client_sock);
 
      printf("Here is the message: %s\n",buffer);
-     n = write(newsockfd, buffer, 255); //Replies to client by writing back into socket
+     n = write(newsockfd, buffer, BUFFER_SIZE-1); //Replies to client by writing back into socket
      if (n < 0) error("ERROR writing to socket");
      close(newsockfd);
      close(sockfd);
