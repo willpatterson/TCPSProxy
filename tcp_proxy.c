@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <strings.h>
+#include <string.h>
 #include <stdio.h>
 #include <sys/types.h> 
 #include <sys/socket.h>
@@ -9,7 +10,12 @@
 #include <netdb.h> 
 #include <unistd.h>
 
-int BUFFER_SIZE = 10;
+int BUFFER_SIZE = 512;
+
+typedef struct backend_server {
+    char * address;
+    int port;
+} BACKEND_SERVER;
 
 void error(char *msg)
 {
@@ -33,8 +39,6 @@ int socket_client(int portno, char *hostname, char *message, int message_len)
         exit(0);
     }
 
-    printf("%s\n", server->h_name); fflush(stdout);
-
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
@@ -46,11 +50,11 @@ int socket_client(int portno, char *hostname, char *message, int message_len)
     return  sockfd;
 }
 
-int socket_server(int portno)  //Args Port
+int socket_server(int frontend_port, BACKEND_SERVER * backends, int backend_no)
 {
      int sockfd, newsockfd, clilen;
      struct sockaddr_in serv_addr, cli_addr;
-     int n;
+     int n, i;
 
      char * buffer;
      buffer = (char *) malloc(BUFFER_SIZE);
@@ -63,7 +67,7 @@ int socket_server(int portno)  //Args Port
      bzero((char *) &serv_addr, sizeof(serv_addr));
      serv_addr.sin_family = AF_INET;
      serv_addr.sin_addr.s_addr = INADDR_ANY;
-     serv_addr.sin_port = htons(portno);
+     serv_addr.sin_port = htons(frontend_port);
      
      //Binds socket to address and port (port contained in serv_addr
      if (bind(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
@@ -81,14 +85,27 @@ int socket_server(int portno)  //Args Port
 
      //CREATE/READ TO/WRITE FROM client socket
      int client_sock;
-     client_sock = socket_client(6379, "127.0.0.1", buffer, BUFFER_SIZE-1);
-     n = write(client_sock, buffer, BUFFER_SIZE-1); 
-     if (n < 0) error("ERROR reading from client socket");
-     n = read(client_sock, buffer, BUFFER_SIZE-1); 
-     if (n < 0) error("ERROR writing to client socket");
-     close(client_sock);
+     char ** client_buffers;
+     client_buffers = (char **) malloc(backend_no);
 
-     printf("Here is the message: %s\n",buffer);
+     //Split TCP connection between backends
+     for (i=0; i<backend_no; ++i) {
+         client_sock = socket_client(backends[i].port, backends[i].address, buffer, BUFFER_SIZE-1);
+
+         client_buffers[i] = (char *) malloc(BUFFER_SIZE);
+         bzero(client_buffers[i], BUFFER_SIZE);
+
+         n = write(client_sock, buffer, BUFFER_SIZE-1); 
+         if (n < 0) error("ERROR reading from client socket");
+         n = read(client_sock, client_buffers[i], BUFFER_SIZE-1); 
+         if (n < 0) error("ERROR writing to client socket");
+         close(client_sock);
+     }
+     
+     for (i=0; i<backend_no; ++i) {
+         printf(client_buffers[i]); fflush(stdout);
+     }
+
      n = write(newsockfd, buffer, BUFFER_SIZE-1); //Replies to client by writing back into socket
      if (n < 0) error("ERROR writing to socket");
      close(newsockfd);
@@ -98,5 +115,20 @@ int socket_server(int portno)  //Args Port
 
 int main(int argc, char *argv[])  //Args Port
 {
-    socket_server(10001);
+    int listen_port = 10001;
+    char * loopback = "127.0.0.1";
+    BACKEND_SERVER * backends;
+    backends = (BACKEND_SERVER*) malloc(2);
+
+    //Redis 0
+    backends[0].address = (char *) malloc(10);
+    strcpy(backends[0].address, loopback);
+    backends[0].port = 6379;
+
+    //Redis 1
+    backends[1].address = (char *) malloc(10);
+    strcpy(backends[1].address, loopback);
+    backends[1].port = 6380;
+
+    socket_server(listen_port, backends, 2);
 }
