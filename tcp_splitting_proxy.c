@@ -124,6 +124,7 @@ int tcp_splitter(int frontend_port, BACKEND_SERVER * backends, int backend_no)
         close(newsockfd);
     }
     close(sockfd);
+    free(buffer);
     return 0; 
 }
 
