@@ -75,45 +75,49 @@ int tcp_splitter(int frontend_port, BACKEND_SERVER * backends, int backend_no)
     listen(sockfd, 15);
     printf("listening\n"); fflush(stdout);
 
-    clilen = sizeof(cli_addr);
-    newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
-    printf("accepted\n"); fflush(stdout);
-    if (newsockfd < 0) error("ERROR on accept");
-
-    n = read(newsockfd, buffer, BUFFER_SIZE-1);
-    if (n < 0) error("ERROR reading from socket");
-
     //CREATE/READ TO/WRITE FROM client socket
     int client_sock;
     char ** client_buffers;
     client_buffers = (char **) malloc(backend_no);
 
-    //Split TCP connection between backends
-    for (i=0; i<backend_no; ++i) {
-        client_sock = socket_client(backends[i].port, backends[i].address, buffer, BUFFER_SIZE-1);
+    clilen = sizeof(cli_addr);
 
-        client_buffers[i] = (char *) malloc(BUFFER_SIZE);
-        bzero(client_buffers[i], BUFFER_SIZE);
+    while (1) {
+        newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
+        printf("accepted\n"); fflush(stdout);
+        if (newsockfd < 0) error("ERROR on accept");
 
-        n = write(client_sock, buffer, BUFFER_SIZE-1); 
-        if (n < 0) error("ERROR reading from client socket");
-        n = read(client_sock, client_buffers[i], BUFFER_SIZE-1); 
-        if (n < 0) error("ERROR writing to client socket");
-        close(client_sock);
-    }
+        n = read(newsockfd, buffer, BUFFER_SIZE-1);
+        if (n < 0) error("ERROR reading from socket");
+
+        //Split TCP connection between backends
+        for (i=0; i<backend_no; ++i) {
+            client_sock = socket_client(backends[i].port, backends[i].address, buffer, BUFFER_SIZE-1);
+
+            client_buffers[i] = (char *) malloc(BUFFER_SIZE);
+            bzero(client_buffers[i], BUFFER_SIZE);
+
+            n = write(client_sock, buffer, BUFFER_SIZE-1); 
+            if (n < 0) error("ERROR reading from client socket");
+            n = read(client_sock, client_buffers[i], BUFFER_SIZE-1); 
+            if (n < 0) error("ERROR writing to client socket");
+            close(client_sock);
+        }
     
-    //Print Split replies 
-    //TODO: 
-    // * Check for diffs in split replies
-    // * Develop policy for responding when replies differ
-    for (i=0; i<backend_no; ++i) {
-        printf(client_buffers[i]); fflush(stdout);
-    }
+        //Print Split replies + deallocate client_buffers
+        //TODO: 
+        // * Check for diffs in split replies
+        // * Develop policy for responding when replies differ
+        for (i=0; i<backend_no; ++i) {
+            printf(client_buffers[i]); fflush(stdout);
+            free(client_buffers[i]);
+        }
 
-    //Replies to back to client
-    n = write(newsockfd, buffer, BUFFER_SIZE-1); 
-    if (n < 0) error("ERROR writing to socket");
-    close(newsockfd);
+        //Replies to back to client
+        n = write(newsockfd, buffer, BUFFER_SIZE-1); 
+        if (n < 0) error("ERROR writing to socket");
+        close(newsockfd);
+    }
     close(sockfd);
     return 0; 
 }
