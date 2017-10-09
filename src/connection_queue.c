@@ -86,4 +86,32 @@ int display_connection(Connection * conn) {
 }
 
 int free_connection_queue(ConnectionQueue * conn_queue) {}
-int free_connection(Connection * conn) {}
+int free_connection(Connection * conn) {} 
+
+int main(int argc, char *argv[]) {
+    Connection * conn1;
+    conn1 = (Connection *) malloc(1);
+    conn1->socketfd = 1;
+    conn1->buffer = (char *) malloc(6);
+    strcpy(conn1->buffer, "test1");
+
+    Connection * conn2;
+    conn2 = (Connection *) malloc(1);
+    conn2->socketfd = 2;
+    conn2->buffer = (char *) malloc(6);
+    strcpy(conn2->buffer, "test2");
+
+    Connection * conn3;
+    conn3 = (Connection *) malloc(1);
+    conn3->socketfd = 3;
+    conn3->buffer = (char *) malloc(6);
+    strcpy(conn3->buffer, "test3");
+
+    ConnectionQueue * conn_queue;
+    conn_queue = init_queue(10);
+    enqueue(conn_queue, conn1);
+    enqueue(conn_queue, conn2);
+    enqueue(conn_queue, conn3);
+
+    display_connection_queue(conn_queue);
+}
