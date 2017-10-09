@@ -7,7 +7,7 @@ any production envrionment.
 ## Background
 
 TCPSProxy was created to easily write to mulitple redis masters as if they are
-one, though it could be used for other purpouses.
+one, though it could be used for other purposes.
 
 ## Acknowledgements
 
