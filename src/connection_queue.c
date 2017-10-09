@@ -58,8 +58,32 @@ Connection * dequeue(ConnectionQueue * conn_queue) {
     return front_conn;
 }
 
-int display_connection_queue(ConnectionQueue * conn_queue) {}
-int display_connection(Connection * conn) {}
+int display_connection_queue(ConnectionQueue * conn_queue) {
+    if (conn_queue == NULL) return 1;
+
+    printf("FRONT:\n");
+    printf("-------------------\n");
+
+    int count = 0;
+    ConnectionNode * current = conn_queue->front;
+    while (current != NULL) {
+        printf("Num: %d\n", count);
+        display_connection(current->conn);
+        current = current->previous;
+        printf("-------------------\n");
+        ++count;
+    }
+
+    printf("DONE\n");
+    return 1;
+}
+
+int display_connection(Connection * conn) {
+    if (conn == NULL) return 1;
+    printf("Buffer   : %s\n", conn->buffer);
+    printf("Socketfd : %s\n", conn->socketfd);
+    return 0;
+}
 
 int free_connection_queue(ConnectionQueue * conn_queue) {}
 int free_connection(Connection * conn) {}

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <strings.h>
 #include <string.h>
+#include <stdio.h>
 
 typedef struct connection Connection;
 typedef struct connection_node ConnectionNode;
