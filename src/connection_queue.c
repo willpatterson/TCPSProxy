@@ -109,9 +109,15 @@ int main(int argc, char *argv[]) {
 
     ConnectionQueue * conn_queue;
     conn_queue = init_queue(10);
+
+    printf("Test enqueue, display_queue:\n");
     enqueue(conn_queue, conn1);
     enqueue(conn_queue, conn2);
     enqueue(conn_queue, conn3);
-
     display_connection_queue(conn_queue);
+    
+    printf("\nTest dequeue:\n");
+    Connection * deq_conn;
+    deq_conn = dequeue(conn_queue);
+    display_connection(deq_conn); //should be test1
 }
