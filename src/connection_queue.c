@@ -34,11 +34,11 @@ int enqueue(ConnectionQueue * conn_queue, Connection * conn) {
     new_conn_node->previous = NULL;
     new_conn_node->conn = conn;
 
-    int queue_len = conn_queue->length + 1;
+    ++conn_queue->length;
 
-    if (queue_len > conn_queue->max_length)
+    if (conn_queue->length > conn_queue->max_length)
         return 2;
-    else if (queue_len == 1)
+    else if (conn_queue->length == 1)
         conn_queue->front = new_conn_node;
     else
         conn_queue->end->previous = new_conn_node;
@@ -81,7 +81,7 @@ int display_connection_queue(ConnectionQueue * conn_queue) {
 int display_connection(Connection * conn) {
     if (conn == NULL) return 1;
     printf("Buffer   : %s\n", conn->buffer);
-    printf("Socketfd : %s\n", conn->socketfd);
+    printf("Socketfd : %d\n", conn->socketfd);
     return 0;
 }
 
