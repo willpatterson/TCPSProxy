@@ -58,3 +58,8 @@ Connection * dequeue(ConnectionQueue * conn_queue) {
     return front_conn;
 }
 
+int display_connection_queue(ConnectionQueue * conn_queue) {}
+int display_connection(Connection * conn) {}
+
+int free_connection_queue(ConnectionQueue * conn_queue) {}
+int free_connection(Connection * conn) {}
