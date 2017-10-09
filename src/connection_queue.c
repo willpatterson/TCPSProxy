@@ -85,8 +85,19 @@ int display_connection(Connection * conn) {
     return 0;
 }
 
-int free_connection_queue(ConnectionQueue * conn_queue) {}
-int free_connection(Connection * conn) {} 
+int free_connection_queue(ConnectionQueue ** conn_queue) {
+    if (conn_queue == NULL) return 1;
+
+}
+
+int free_connection(Connection ** conn) {
+    if (*conn == NULL) return 1;
+    Connection * connp = *conn;
+    free(connp->buffer);
+    free(*conn);
+    *conn = NULL;
+    return 0;
+} 
 
 int main(int argc, char *argv[]) {
     Connection * conn1;
@@ -120,4 +131,7 @@ int main(int argc, char *argv[]) {
     Connection * deq_conn;
     deq_conn = dequeue(conn_queue);
     display_connection(deq_conn); //should be test1
+
+    free_connection(&deq_conn);
+    display_connection(deq_conn); //should be Nothing
 }
