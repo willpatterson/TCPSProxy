@@ -49,8 +49,12 @@ int enqueue(ConnectionQueue * conn_queue, Connection * conn) {
 Connection * dequeue(ConnectionQueue * conn_queue) {
     if ((conn_queue == NULL) || (conn_queue->front == NULL)) return NULL;
 
-    ConnectionNode * front_conn;
-    front_conn = conn_queue->front;
-    conn_queue->front = front_conn->previous;
-    return front_conn->conn;
+    ConnectionNode * front_conn_node;
+    Connection * front_conn;
+    front_conn_node = conn_queue->front;
+    conn_queue->front = front_conn_node->previous;
+    front_conn = front_conn_node->conn;
+    free(front_conn_node);
+    return front_conn;
 }
+
