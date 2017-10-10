@@ -9,6 +9,18 @@
 #include <netinet/in.h>
 #include <netdb.h> 
 #include <unistd.h>
+#include <signal.h>
+
+void INThandler(int sig) {
+    printf("Interupted!\n");
+    _exit(1);
+}
+
+void TERMhandler(int sig) {
+    printf("Killed!\n");
+    _exit(1);
+}
+
 
 int BUFFER_SIZE = 1024*4;
 
@@ -130,7 +142,9 @@ int tcp_splitter(int frontend_port, BACKEND_SERVER * backends, int backend_no)
 
 int main(int argc, char *argv[])
 {
-    int listen_port = 10001;
+    signal(SIGINT, INThandler);
+    signal(SIGTERM, TERMhandler);
+    int listen_port = 10000;
     char * loopback = "127.0.0.1";
     BACKEND_SERVER * backends;
     backends = (BACKEND_SERVER*) malloc(2);
