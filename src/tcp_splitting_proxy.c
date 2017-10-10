@@ -13,12 +13,12 @@
 
 void INThandler(int sig) {
     printf("Interupted!\n");
-    _exit(1);
+    exit(1);
 }
 
 void TERMhandler(int sig) {
     printf("Killed!\n");
-    _exit(1);
+    exit(1);
 }
 
 
@@ -100,6 +100,7 @@ int tcp_splitter(int frontend_port, BACKEND_SERVER * backends, int backend_no)
         if (newsockfd < 0) error("ERROR on accept");
 
         n = read(newsockfd, buffer, BUFFER_SIZE-1);
+        printf("Read n: %d\n", n);
         if (n < 0) error("ERROR reading from socket");
 
         //Split TCP connection between backends
@@ -144,7 +145,7 @@ int main(int argc, char *argv[])
 {
     signal(SIGINT, INThandler);
     signal(SIGTERM, TERMhandler);
-    int listen_port = 10000;
+    int listen_port = 10002;
     char * loopback = "127.0.0.1";
     BACKEND_SERVER * backends;
     backends = (BACKEND_SERVER*) malloc(2);
