@@ -1,8 +1,8 @@
 # TCP Splitting Proxy (TCPSProxy) README
 
-TCPSProxy is a reverse proxy that splits a TCP connection between a set of
-servers. TCPSProxy is currently in early development and should not be used in
-any production envrionment.
+TCPSProxy splits a TCP connection between a set of servers. TCPSProxy
+is currently in early development and should not be used inany production 
+envrionment.
 
 ## Background
 
