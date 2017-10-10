@@ -15,7 +15,7 @@ Thanks to [Robert Ingalls](http://www.cs.rpi.edu/~moorthy/Courses/os98/Pgms/sock
 
 ## Major TODOs:
 
-* memory safe buffers
+* buffer overload checking
 * implement connection queue
 * async reads/writes
 * config parsing
