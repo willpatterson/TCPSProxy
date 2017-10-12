@@ -12,11 +12,3 @@ one, though it could be used for other purposes.
 ## Acknowledgements
 
 Thanks to [Robert Ingalls](http://www.cs.rpi.edu/~moorthy/Courses/os98/Pgms/socket.html) for providing biolerplate code for working with IP sockets.
-
-## Major TODOs:
-
-* buffer overload checking
-* implement connection queue
-* async reads/writes
-* config parsing
-* output diff with conflict resolution policies
