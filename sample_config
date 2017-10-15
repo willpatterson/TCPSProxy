@@ -1,0 +1,17 @@
+#Sample tcpsproxy config
+
+defauts {
+    polocy permissive
+}
+
+frontend main {
+    bind 127.0.0.1:1000
+    conqueue 30
+    backend main
+}
+
+backend main {
+    # name, address:port diff polocy
+    server redis1 127.0.0.1:10001 permissive
+    server redis2 127.0.0.1:10002 strict
+}
