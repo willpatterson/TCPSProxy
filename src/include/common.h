@@ -18,4 +18,5 @@ typedef struct frontend {
     char * backend_name;
 } FRONTEND;
 
-
+BACKEND ** BACKENDS;
+FRONTEND ** FRONTENDS;
