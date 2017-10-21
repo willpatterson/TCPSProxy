@@ -8,7 +8,7 @@ typedef struct backend_server {
 
 typedef struct backend {
     char * name;
-    BACKEND_SERVER * backend_servers;
+    BACKEND_SERVER ** backend_servers;
 } BACKEND;
 
 typedef struct frontend {
