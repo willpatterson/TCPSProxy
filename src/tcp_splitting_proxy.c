@@ -11,6 +11,8 @@
 #include <unistd.h>
 #include <signal.h>
 
+#include "include/common.h"
+
 void INThandler(int sig) {
     printf("Interupted!\n");
     exit(1);
@@ -23,11 +25,6 @@ void TERMhandler(int sig) {
 
 
 int BUFFER_SIZE = 1024*4;
-
-typedef struct backend_server {
-    char * address;
-    int port;
-} BACKEND_SERVER;
 
 void error(char *msg)
 {
