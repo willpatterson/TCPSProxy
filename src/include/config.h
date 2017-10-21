@@ -9,6 +9,10 @@
 const char * DEFAULT_KEYWORD = "default";
 const char * FRONTEND_KEYWORD = "frontend";
 const char * BACKEND_KEYWORD = "backend";
+const char * BIND_KEYWORD = "bind";
+const char * POLICY_KEYWORD = "policy";
+const char * SERVER_KEYWORD = "server";
+const char * CONQUEU_KEYWORD = "conqueue";
 
 void parse_cfg_file(FRONTEND ** FRONTENDS, BACKEND ** BACKENDS, char * cfg_path);
 
