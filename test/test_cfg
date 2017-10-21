@@ -1,7 +1,7 @@
 #Sample tcpsproxy config
 
 defauts {
-    polocy permissive
+    policy permissive
 }
 
 frontend main {
