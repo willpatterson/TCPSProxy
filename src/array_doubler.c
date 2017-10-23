@@ -42,6 +42,34 @@ LIST * append_list(LIST * list, void * value) {
     return list;
 }
 
+/* Returns 0 if removed, 1 if error */
+int list_remove_item(LIST * list, int index) {
+    int i;
+    int new_length;
+    void ** tmp_ptr;
+
+    if (index >= list->end)
+        return 1;
+
+    free(list->list[index]);
+    list->end = list->end - 1;
+    if (list->end >= list->length/4) {
+        tmp_ptr = list->list;
+        new_length = list->length/2;
+        list->list = (void *) calloc(new_length, sizeof(void *));
+        for (i=0; i<index; ++i)
+            list->list[i] = tmp_ptr[i];
+        for (i=index; i<list->end-1; ++i)
+            list->list[i] = tmp_ptr[i+1];
+        free(tmp_ptr);
+    }
+    else {
+        for (i=index; i<list->end-1; ++i)
+            list->list[i] = list->list[i+1];
+    }
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
     LIST * test_list;
@@ -84,5 +112,6 @@ int main(int argc, char *argv[])
     test_list = append_list(test_list, test_value6);
     printf("%d\n", *(int *)(test_list->list[5]));
     //test_list = append_list(test_list, test_value2);
+    return 0;
 }
 
