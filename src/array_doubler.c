@@ -6,7 +6,7 @@
 typedef struct generic_list {
     void ** list;
     int length;
-    int values;
+    int end;
 } LIST;
 
 LIST * init_list(int starting_length) {
@@ -18,7 +18,7 @@ LIST * init_list(int starting_length) {
 
     list->list = (void *) calloc(starting_length, sizeof(void *));
     list->length = starting_length;
-    list->values = 0;
+    list->end = 0;
 
     return list;
 }
@@ -27,18 +27,18 @@ LIST * append_list(LIST * list, void * value) {
     int i;
     int new_length;
     void ** tmp_ptr;
-    list->values++;
-    if (list->length <= list->values) { //double list
+    list->end++;
+    if (list->length <= list->end) { //double list
         printf("test0\n");
         new_length = list->length * 2;
         tmp_ptr = list->list;
         list->list = (void *) calloc(new_length, sizeof(void *));
-        for (i=0; i<list->values; ++i)
+        for (i=0; i<list->end; ++i)
             list->list[i] = tmp_ptr[i];
         list->length = new_length;
         free(tmp_ptr);
     }
-    list->list[list->values-1] = value;
+    list->list[list->end-1] = value;
     return list;
 }
 
