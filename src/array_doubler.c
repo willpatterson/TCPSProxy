@@ -1,4 +1,9 @@
-/* Generic Array doubler */
+/* Generic Array doubler 
+ * TODO:
+ *   delete function
+ *   generic print/display functionallity
+ *   remove tests
+ */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -9,6 +14,9 @@ typedef struct generic_list {
     int end;
 } LIST;
 
+/* List init fuction. Returns list with an empty allocated array
+ * of void pointers of default size 10
+ */
 LIST * init_list(int starting_length) {
     
     LIST * list;
@@ -23,6 +31,7 @@ LIST * init_list(int starting_length) {
     return list;
 }
 
+/* Append to end of list */
 LIST * append_list(LIST * list, void * value) {
     int i;
     int new_length;
@@ -53,7 +62,7 @@ int list_remove_item(LIST * list, int index) {
 
     free(list->list[index]);
     list->end = list->end - 1;
-    if (list->end >= list->length/4) {
+    if (list->end >= list->length/4) { // shrink array
         tmp_ptr = list->list;
         new_length = list->length/2;
         list->list = (void *) calloc(new_length, sizeof(void *));
@@ -72,9 +81,11 @@ int list_remove_item(LIST * list, int index) {
 
 int main(int argc, char *argv[])
 {
+    // TESTS:
     LIST * test_list;
     test_list = init_list(2);
 
+    // Insert Tests:
     int * test_value;
     test_value = (int*) calloc(1, sizeof(int));
     *test_value = 1111;
