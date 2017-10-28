@@ -1,6 +1,5 @@
 /* Generic Array doubler 
  * TODO:
- *   delete function
  *   generic print/display functionallity
  */
 
@@ -30,6 +29,7 @@ LIST * init_list(int starting_length) {
     return list;
 }
 
+
 /* Append to end of list */
 LIST * append_list(LIST * list, void * value) {
     int i;
@@ -49,7 +49,8 @@ LIST * append_list(LIST * list, void * value) {
     return list;
 }
 
-/* Returns 0 if removed, 1 if error */
+/* Deletes item and shifts list
+ * Returns 0 if removed, 1 if error */
 int list_remove_item(LIST * list, int index) {
     int i;
     int new_length;
@@ -75,6 +76,16 @@ int list_remove_item(LIST * list, int index) {
         for (i=index; i<list->end-1; ++i)
             list->list[i] = list->list[i+1];
     }
+    return 0;
+}
+
+/* deletes item but doesn't shfit list
+ * Returns 0 if removed, 1 if error */
+int list_delete_item(LIST * list, int index) {
+    if (list == NULL) return 1;
+    if (index >= list->end) return 1;
+    free(list->list[index]);
+    list->list[index] = NULL;
     return 0;
 }
 
@@ -156,7 +167,21 @@ int main(int argc, char *argv[])
         printf("i: %d\n", i);
         printf("%d\n", *(int *)(remove_test_list->list[i]));
     }
+
+    // Deletion Test
+    printf("\nDELETE TESTS\n");
+    LIST * delete_test_list;
+    delete_test_list = init_list(2);
     
+    int * test_delete;
+    int result;
+    test_delete = (int*) calloc(1, sizeof(int));
+    *test_delete= 6666;
+    delete_test_list = append_list(delete_test_list, test_delete);
+    result = list_delete_item(delete_test_list, 0);
+    if ((result == 0) && (delete_test_list->list[0] == NULL))
+        printf("SUCCESS\n");
+
     return 0;
 }
 
