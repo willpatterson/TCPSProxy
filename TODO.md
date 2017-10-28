@@ -5,6 +5,7 @@
 * implement connection queue
 * async reads/writes
 * output diff with conflict resolution policies
+* implement unit testing framework
 
 ## Config and config parsing
 
