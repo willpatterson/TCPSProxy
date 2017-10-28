@@ -49,6 +49,37 @@ LIST * append_list(LIST * list, void * value) {
     return list;
 }
 
+int list_insert_item(LIST * list, void * value, int insert_after) {
+    int i;
+    int new_length;
+    void ** tmp_ptr;
+    if (list == NULL); return 1;
+    if (insert_after >= list->end) return 1;
+    if (insert_after == list->end-1) {
+        append_list(list, value);
+        return 0;
+    }
+
+    list->end++;
+    if (list->length <= list->end) { //double list
+        new_length = list->length * 2;
+        tmp_ptr = list->list;
+        list->list = (void *) calloc(new_length, sizeof(void *));
+        for (i=0; i<=insert_after; ++i)
+            list->list[i] = tmp_ptr[i];
+        list->list[insert_after+1] = value;
+        for (i=insert_after+1; i<=list->end; ++i)
+            list->list[i] = tmp_ptr[i];
+        list->length = new_length;
+        free(tmp_ptr);
+    }
+
+    for (i=insert_after+1; i<=list->end; ++i)
+        list->list[i+1] = list->list[i];
+    list->list[insert_after+1] = value;
+    return 0;
+}
+
 /* Deletes item and shifts list
  * Returns 0 if removed, 1 if error */
 int list_remove_item(LIST * list, int index) {
