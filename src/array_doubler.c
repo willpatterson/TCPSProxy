@@ -1,6 +1,8 @@
 /* Generic Array doubler 
  * TODO:
  *   generic print/display functionallity
+ *   function to merge lists
+ *   function to free list
  */
 
 #include <stdlib.h>
