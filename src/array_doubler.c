@@ -2,7 +2,6 @@
  * TODO:
  *   generic print/display functionallity
  *   function to merge lists
- *   function to free list
  */
 
 #include <stdlib.h>
@@ -123,6 +122,20 @@ int list_delete_item(LIST * list, int index) {
     return 0;
 }
 
+/* Frees all items in a list including the list but not the list structure 
+ * Not sure if this should free the list structure in addition to the items in the list 
+ * Currently you must free the list then free the structure. Example:
+ *     free_list(list);
+ *     free(list);
+ */
+void free_list(LIST * list) {
+    int i;
+    if (list == NULL) return;
+    for (i=0; i<list->end; ++i)
+        free(list->list[i]);
+    free(list->list);
+}
+
 int main(int argc, char *argv[])
 {
     // TESTS:
@@ -166,6 +179,8 @@ int main(int argc, char *argv[])
     append_list(test_list, test_value5);
     append_list(test_list, test_value6);
     printf("%d\n", *(int *)(test_list->list[5]));
+    free_list(test_list);
+    free(test_list);
 
     // Removal Tests
 
@@ -201,6 +216,8 @@ int main(int argc, char *argv[])
         printf("i: %d\n", i);
         printf("%d\n", *(int *)(remove_test_list->list[i]));
     }
+    free_list(remove_test_list);
+    free(remove_test_list);
 
     // Deletion Test
     printf("\nDELETE TESTS\n");
@@ -215,6 +232,8 @@ int main(int argc, char *argv[])
     result = list_delete_item(delete_test_list, 0);
     if ((result == 0) && (delete_test_list->list[0] == NULL))
         printf("SUCCESS\n");
+    free_list(delete_test_list);
+    free(delete_test_list);
 
     return 0;
 }
