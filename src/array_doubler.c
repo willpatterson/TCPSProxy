@@ -31,10 +31,11 @@ LIST * init_list(int starting_length) {
 
 
 /* Append to end of list */
-LIST * append_list(LIST * list, void * value) {
+int append_list(LIST * list, void * value) {
     int i;
     int new_length;
     void ** tmp_ptr;
+    if (list == NULL) return 1;
     list->end++;
     if (list->length <= list->end) { //double list
         new_length = list->length * 2;
@@ -46,7 +47,7 @@ LIST * append_list(LIST * list, void * value) {
         free(tmp_ptr);
     }
     list->list[list->end-1] = value;
-    return list;
+    return 0;
 }
 
 int list_insert_item(LIST * list, void * value, int insert_after) {
@@ -151,17 +152,17 @@ int main(int argc, char *argv[])
     test_value6 = (int*) calloc(1, sizeof(int));
     *test_value6 = 6666;
 
-    test_list = append_list(test_list, test_value);
+    append_list(test_list, test_value);
     printf("%d\n", *(int *)(test_list->list[0]));
 
-    test_list = append_list(test_list, test_value2);
+    append_list(test_list, test_value2);
     printf("%d\n", *(int *)(test_list->list[0]));
     printf("%d\n", *(int *)(test_list->list[1]));
 
-    test_list = append_list(test_list, test_value3);
-    test_list = append_list(test_list, test_value4);
-    test_list = append_list(test_list, test_value5);
-    test_list = append_list(test_list, test_value6);
+    append_list(test_list, test_value3);
+    append_list(test_list, test_value4);
+    append_list(test_list, test_value5);
+    append_list(test_list, test_value6);
     printf("%d\n", *(int *)(test_list->list[5]));
 
     // Removal Tests
@@ -208,7 +209,7 @@ int main(int argc, char *argv[])
     int result;
     test_delete = (int*) calloc(1, sizeof(int));
     *test_delete= 6666;
-    delete_test_list = append_list(delete_test_list, test_delete);
+    append_list(delete_test_list, test_delete);
     result = list_delete_item(delete_test_list, 0);
     if ((result == 0) && (delete_test_list->list[0] == NULL))
         printf("SUCCESS\n");
