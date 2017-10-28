@@ -2,7 +2,6 @@
  * TODO:
  *   delete function
  *   generic print/display functionallity
- *   remove tests
  */
 
 #include <stdlib.h>
@@ -38,7 +37,6 @@ LIST * append_list(LIST * list, void * value) {
     void ** tmp_ptr;
     list->end++;
     if (list->length <= list->end) { //double list
-        printf("test0\n");
         new_length = list->length * 2;
         tmp_ptr = list->list;
         list->list = (void *) calloc(new_length, sizeof(void *));
@@ -62,9 +60,10 @@ int list_remove_item(LIST * list, int index) {
 
     free(list->list[index]);
     list->end = list->end - 1;
-    if (list->end >= list->length/4) { // shrink array
+    if (list->end <= list->length/4) { // shrink array
         tmp_ptr = list->list;
         new_length = list->length/2;
+        list->length = new_length;
         list->list = (void *) calloc(new_length, sizeof(void *));
         for (i=0; i<index; ++i)
             list->list[i] = tmp_ptr[i];
@@ -122,7 +121,42 @@ int main(int argc, char *argv[])
     test_list = append_list(test_list, test_value5);
     test_list = append_list(test_list, test_value6);
     printf("%d\n", *(int *)(test_list->list[5]));
-    //test_list = append_list(test_list, test_value2);
+
+    // Removal Tests
+
+    int i;
+    int list_lenght = 8;
+    printf("\nREMOVE TESTS\n");
+    LIST * remove_test_list;
+    remove_test_list = init_list(2);
+
+    int * tmp_ptr;
+    for (i=0; i<list_lenght; ++i) {
+        tmp_ptr = (int*) calloc(1, sizeof(int));
+        *tmp_ptr = i;
+        append_list(remove_test_list, tmp_ptr);
+        printf("APPEND ITEM: %d\n", i);
+    }
+
+    printf("\n");
+    printf("END: %d\n", remove_test_list->end);
+    printf("\n");
+    
+    for (i=list_lenght; i>=list_lenght/4; --i) {
+        printf("REMOVE ITEM: %d\n", i);
+        list_remove_item(remove_test_list, i);
+    }
+
+    printf("\n");
+    printf("END: %d\n", remove_test_list->end);
+    printf("LENGTH: %d\n", remove_test_list->length);
+    printf("\n");
+
+    for (i=0; i<remove_test_list->end; ++i) {
+        printf("i: %d\n", i);
+        printf("%d\n", *(int *)(remove_test_list->list[i]));
+    }
+    
     return 0;
 }
 
