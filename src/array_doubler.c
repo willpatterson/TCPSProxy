@@ -55,8 +55,9 @@ int list_insert_item(LIST * list, void * value, int insert_after) {
     int i;
     int new_length;
     void ** tmp_ptr;
-    if (list == NULL); return 1;
-    if (insert_after >= list->end) return 1;
+    void * tmp_item;
+    if (list == NULL) return 1;
+    if (insert_after >= list->end)  return 1;
     if (insert_after == list->end-1) {
         append_list(list, value);
         return 0;
@@ -76,8 +77,9 @@ int list_insert_item(LIST * list, void * value, int insert_after) {
         free(tmp_ptr);
     }
 
-    for (i=insert_after+1; i<=list->end; ++i)
-        list->list[i+1] = list->list[i];
+    for (i=list->end; i>insert_after+1; --i) {
+        list->list[i] = list->list[i-1];
+    }
     list->list[insert_after+1] = value;
     return 0;
 }
@@ -234,6 +236,59 @@ int main(int argc, char *argv[])
         printf("SUCCESS\n");
     free_list(delete_test_list);
     free(delete_test_list);
+
+    // Insertion Test
+    printf("\nINSERTION TEST\n");
+    // Test insert without doubling
+    result = 0;
+    LIST * insertion_test_list;
+    insertion_test_list = init_list(2);
+
+    for (i=0; i<list_lenght; ++i) {
+        tmp_ptr = (int*) calloc(1, sizeof(int));
+        *tmp_ptr = i;
+        append_list(insertion_test_list, tmp_ptr);
+    }
+
+    int * test_insert;
+    test_insert = (int*) calloc(1, sizeof(int));
+    *test_insert= 6666;
+
+    result = list_insert_item(insertion_test_list, test_insert, 1);
+    printf("insert result: %d\n", result);
+
+    for (i=0; i<insertion_test_list->end; ++i) {
+        printf("i: %d\n", i);
+        printf("%d\n", *(int *)(insertion_test_list->list[i]));
+    }
+
+    free_list(insertion_test_list);
+    free(insertion_test_list);
+    insertion_test_list = NULL;
+
+    // Test insertion with doubling
+    result = 0;
+    insertion_test_list = init_list(2);
+
+    for (i=0; i<7; ++i) {
+        tmp_ptr = (int*) calloc(1, sizeof(int));
+        *tmp_ptr = i;
+        append_list(insertion_test_list, tmp_ptr);
+    }
+
+    printf("Length: %d\n", insertion_test_list->length);
+    test_insert = (int*) calloc(1, sizeof(int));
+    *test_insert= 6666;
+
+    result = list_insert_item(insertion_test_list, test_insert, 1);
+    printf("insert result: %d\n", result);
+
+    for (i=0; i<insertion_test_list->end; ++i) {
+        printf("i: %d\n", i);
+        printf("%d\n", *(int *)(insertion_test_list->list[i]));
+    }
+
+    printf("Length: %d\n", insertion_test_list->length);
 
     return 0;
 }
