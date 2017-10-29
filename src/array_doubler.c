@@ -3,15 +3,7 @@
  *   generic print/display functionallity
  *   function to merge lists
  */
-
-#include <stdlib.h>
-#include <stdio.h>
-
-typedef struct generic_list {
-    void ** list;
-    int length;
-    int end;
-} LIST;
+#include "include/array_doubler.h"
 
 /* List init fuction. Returns list with an empty allocated array
  * of void pointers of default size 10
