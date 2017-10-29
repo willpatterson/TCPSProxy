@@ -14,7 +14,7 @@ const char * POLICY_KEYWORD = "policy";
 const char * SERVER_KEYWORD = "server";
 const char * CONQUEUE_KEYWORD = "conqueue";
 
-void parse_cfg_file(FRONTEND ** FRONTENDS, BACKEND ** BACKENDS, char * cfg_path);
+void parse_cfg_file(LIST * frontends, LIST * backends, char * cfg_path);
 
 BACKEND * parse_backend_block(char * buffer);
 BACKEND_SERVER * parse_backend_server_line(char * buffer);

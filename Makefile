@@ -16,7 +16,7 @@ connection_queue: ./src/connection_queue.c ./src/include/connection_queue.h
 	mkdir -p ./bin
 	gcc ./src/connection_queue.c -o ./bin/connection_queue_test
 
-config_parser: ./src/config.c ./src/include/config.h ./src/include/common.h
+config_parser: ./src/config.c ./src/include/config.h ./src/include/common.h ./src/include/array_doubler.h
 	mkdir -p ./bin
 	gcc ./src/config.c -o ./bin/config_parse
 

@@ -1,5 +1,7 @@
 /* Common Variables and Structs */
 
+#include "array_doubler.h"
+
 typedef struct backend_server {
     char * address;
     int port;
@@ -18,5 +20,5 @@ typedef struct frontend {
     char * backend_name;
 } FRONTEND;
 
-BACKEND ** BACKENDS;
-FRONTEND ** FRONTENDS;
+LIST * BACKENDS;
+LIST * FRONTENDS;
