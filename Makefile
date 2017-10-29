@@ -16,13 +16,13 @@ connection_queue: ./src/connection_queue.c ./src/include/connection_queue.h
 	mkdir -p ./bin
 	gcc ./src/connection_queue.c -o ./bin/connection_queue_test
 
-config_parser: ./src/config.c ./src/include/config.h ./src/include/common.h ./src/include/array_doubler.h
+config_parser: ./src/config.c ./src/include/config.h ./src/include/common.h ./src/include/generic_list.h
 	mkdir -p ./bin
 	gcc ./src/config.c -o ./bin/config_parse
 
-list: ./src/array_doubler.c ./src/include/array_doubler.h
+list: ./src/generic_list.c ./src/include/generic_list.h
 	mkdir -p ./bin
-	gcc ./src/array_doubler.c -o ./bin/array_doubler
+	gcc ./src/generic_list.c -o ./bin/generic_list
 
 clean:
 	rm ./bin/*

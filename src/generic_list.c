@@ -3,7 +3,7 @@
  *   generic print/display functionallity
  *   function to merge lists
  */
-#include "include/array_doubler.h"
+#include "include/generic_list.h"
 
 /* List init fuction. Returns list with an empty allocated array
  * of void pointers of default size 10

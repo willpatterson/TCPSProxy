@@ -1,6 +1,6 @@
 /* Common Variables and Structs */
 
-#include "array_doubler.h"
+#include "generic_list.h"
 
 typedef struct backend_server {
     char * address;
