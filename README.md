@@ -1,7 +1,7 @@
 # TCP Splitting Proxy (TCPSProxy) README
 
 TCPSProxy splits a TCP connection between a set of servers. TCPSProxy
-is currently in early development and should not be used inany production 
+is currently in early development and should not be used in any production 
 envrionment.
 
 ## Background
